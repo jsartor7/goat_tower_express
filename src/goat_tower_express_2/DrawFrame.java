@@ -27,9 +27,9 @@ public class DrawFrame extends Component {
 
 
     
-    float[] scales = { 1f, 1f, 1f, 1f };
-    float[] offsets = new float[4];
-    RescaleOp rop;
+ //   float[] scales = { 1f, 1f, 1f, 1f };
+ //   float[] offsets = new float[4];
+    RescaleOp dirtrop;
     		
     public DrawFrame(Goat[] in_goats) {
     	dirtimg=fu.LoadImg("dirt2.jpg");	
@@ -50,16 +50,30 @@ public class DrawFrame extends Component {
     //    rop = new RescaleOp(scales, offsets, null);
     }
 
+    public void setColorScale(float opacity) {
+    	//don't really need this function at all
+  //      scales[3] = opacity;
+    //    rop = new RescaleOp(scales, offsets, null);
+    }
     public void paint(Graphics g) {
         g2d = (Graphics2D)g;
-        g2d.drawImage(dirtimg, rop, 0, 0);
+        
+        //draw backgroun first
+        g2d.drawImage(dirtimg, dirtrop, 0, 0);
+        
+        //next the counter
+        g2d.setColor(Color.WHITE);
+        int style = Font.BOLD | Font.ITALIC;
+        Font font = new Font ("Helvetica", style , 40);
+        g2d.setFont(font);
+        g2d.drawString("You have eaten "+goats[0].kill_count+" grass", 100, 100);
+   
+        //next all the important stuff
         for(int i=0;i<goats.length;i++)
         {
         	Goat cur=goats[i];
-        	BufferedImage tempimg=goatimg;
-        	if(cur.type==1)
-        		tempimg=grassimg;
-        	g2d.drawImage(tempimg, rop, cur.get_pos(1,0), cur.get_pos(1,1));
+        	g2d.drawImage(cur.img, cur.rop, cur.get_pos(1,0), cur.get_pos(1,1));
         }
+        
     }
 }

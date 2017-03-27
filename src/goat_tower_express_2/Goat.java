@@ -1,5 +1,8 @@
 package goat_tower_express_2;
 
+import java.awt.image.BufferedImage;
+import java.awt.image.RescaleOp;
+
 //should split this class into a generic class of objects
 //and specific ones that do slightly diff functions
 public class Goat {
@@ -14,18 +17,37 @@ public class Goat {
 	//also 600 is meaningless, will be overwritten in constructor
     int[] max={600,600};	
     int[] min={0,0};	
+    int death_count=0;
+    int kill_count=0;
+    BufferedImage img;   
+
+    float[] scales = { 1f, 1f, 1f, 1f };
+    float[] offsets = new float[4];
+    RescaleOp rop;
+
     
-    public Goat(int input_type,int x_i, int y_i, int x_vi, int y_vi, int x_max, int y_max, int width, int height)
+    public Goat(int input_type, BufferedImage inputimg, int x_i, int y_i, int x_vi, int y_vi, int x_max, int y_max)
     {
+    	//0 for goat, 1 for grass
     	type=input_type;
-    	pos[0]=x_i-width/2;
-    	pos[1]=y_i-height/2;
+    	img=inputimg;
+    	size[0]=img.getWidth();
+    	size[1]=img.getHeight();
+
+    	//this has to happen before assigning random positions
+    	set_minmax(0,x_max,(int) size[0]);
+    	set_minmax(1,y_max,(int) size[1]);
+
+    	//position<0 is a flag to randomize the position in that component
+    	pos[0]=x_i-size[0]/2;
+    	pos[1]=y_i-size[1]/2;
+    	for(int i=0;i<2;i++)
+    	{
+    		if(pos[i]<0)
+    			random_pos(i);
+    	}
     	vel[0]=x_vi;
     	vel[1]=y_vi;
-    	set_minmax(0,x_max,width);
-    	set_minmax(1,y_max,height);
-    	size[0]=width;
-    	size[1]=height;
     }
     
     public void set_minmax(int dir, int new_max,int size)
@@ -75,19 +97,36 @@ public class Goat {
     	if(sum==2)
     	{
     		goat.respawn();
+    		kill_count++;
     		return 1;
     	}
     	else
     		return 0;
     	
     }
-    
-    public void respawn()
+
+    public void random_pos(int dir)
     {
+    	//dir can be either 0 for x, 1 for y, or negative for both
     	for(int i=0;i<2;i++)
     	{
+    		if(dir<0||dir==i)
     		pos[i]=Math.random()*max[i];
     	}
+    }
+
+    public void respawn()
+    {
+    	random_pos(-1);
+    	death_count++;
+    }
+
+    public void setColorScale() {
+        scales[0] = 1f;
+        scales[1] = 1f;
+        scales[2] = 1f;
+        offsets[1]= 130f;
+        rop = new RescaleOp(scales, offsets, null);
     }
 
     public void reconfigure(int time)
@@ -120,6 +159,7 @@ public class Goat {
             		vel[i]+=1;
             }
     	
-        
+        if(kill_count>=100)
+        	setColorScale();
     }
 }

@@ -27,7 +27,7 @@ public class Main extends JApplet  {
 	static FileUtil fu=new FileUtil();
     static JFrame frame = new JFrame("Goat Tower Express 2");
 	static DrawFrame dframe;
-	static int max_goats=2;
+	static int max_goats=20;
 	static Goat[] goats = new Goat[max_goats];
 	static Listener listen;
 	
@@ -56,21 +56,13 @@ public class Main extends JApplet  {
 		
 		//this is kind of stupid
 		//needs to be more generic for different sprites
-		int width=(int) dframe.goatimg.getWidth();
-		int height=(int) dframe.goatimg.getHeight();
-		int type=0;
 		for (int i=0;i<max_goats;i++)
 		{
-			if(i>0)
-			{
-				width=(int) dframe.grassimg.getWidth();
-				height=(int) dframe.grassimg.getHeight();
-				type=1;				
-				goats[i]= new Goat(type,700,700,0,0,x_max,y_max,width,height);
-
-			}
+			if(i==0)
+				goats[i]= new Goat(0,dframe.goatimg,700,700,0,0,x_max,y_max);
+		
 			else
-				goats[i]= new Goat(type,0,0,i,i,x_max,y_max,width,height);
+				goats[i]= new Goat(1,dframe.grassimg,-1,-1,0,0,x_max,y_max);
 		}
 
 	}
