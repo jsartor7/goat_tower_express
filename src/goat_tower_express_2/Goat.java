@@ -17,13 +17,15 @@ public class Goat {
 	//also 600 is meaningless, will be overwritten in constructor
     int[] max={600,600};	
     int[] min={0,0};	
+    
     int death_count=0;
     int kill_count=0;
+    String color_mode="normal";
     BufferedImage img;   
 
     float[] scales = { 1f, 1f, 1f, 1f };
     float[] offsets = new float[4];
-    RescaleOp rop;
+    RescaleOp rop;// = new RescaleOp(scales, offsets, null);
 
     
     public Goat(int input_type, BufferedImage inputimg, int x_i, int y_i, int x_vi, int y_vi, int x_max, int y_max)
@@ -98,6 +100,7 @@ public class Goat {
     	{
     		goat.respawn();
     		kill_count++;
+        	setColorScale();
     		return 1;
     	}
     	else
@@ -122,11 +125,48 @@ public class Goat {
     }
 
     public void setColorScale() {
-        scales[0] = 1f;
-        scales[1] = 1f;
-        scales[2] = 1f;
-        offsets[1]= 130f;
-        rop = new RescaleOp(scales, offsets, null);
+       // scales[0] = 1f;
+       // scales[1] = 1f;
+       // scales[2] = 1f;
+    	offsets[0]=1f;
+    	offsets[1]=1f;
+    	offsets[2]=1f;
+    	String temp_str=color_mode;
+
+    	//this is kind of clunky
+    	//also some sound effects here would be nice
+    	if(kill_count>10000)
+    	{
+    		offsets[1]= 0f;
+    		offsets[0]= 0f;
+    		offsets[2]= 0f;
+    	        scales[0] = 0f;
+    	        scales[1] = 0f;
+    	        scales[2] = 0f;
+    		color_mode="black";
+    	}
+    	else if(kill_count>1000)
+    	{
+    		offsets[1]= 0f;
+    		offsets[0]= 0f;
+    		offsets[2]= 0f;
+    	        scales[0] = 0.5f;
+    	        scales[1] = 0.5f;
+    	        scales[2] = 0.5f;
+    		color_mode="grey";
+    	}
+    	else if(kill_count>500)
+    	{
+    		offsets[0]=130f;
+    		color_mode="red";
+    	}
+    	else if(kill_count>100)
+    	{
+    		offsets[1]= 130f;
+    		color_mode="green";
+    	}
+        if(temp_str!=color_mode)
+        	rop = new RescaleOp(scales, offsets, null);
     }
 
     public void reconfigure(int time)
@@ -159,7 +199,6 @@ public class Goat {
             		vel[i]+=1;
             }
     	
-        if(kill_count>=100)
-        	setColorScale();
+     //  if(kill_count>=100)
     }
 }
