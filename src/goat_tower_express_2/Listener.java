@@ -10,12 +10,16 @@ import javax.swing.JPanel;
 
 public class Listener extends JPanel implements KeyListener {
     private char c = 'e';
-    public Goat[] goats;
     
+    //store the whole list
+    //really we just need goat right now tho
+    public EntityList list;
+    public Goat goat;
     
-    public Listener(Goat[] in_goats) {
+    public Listener(EntityList in_list) {
         addKeyListener(this);
-        goats=in_goats;
+        list=in_list;
+        goat=in_list.goat;
     }
 
     public void addNotify() {
@@ -27,16 +31,20 @@ public class Listener extends JPanel implements KeyListener {
         int keyCode = k.getKeyCode();
         switch (keyCode) {
         case KeyEvent.VK_LEFT:
-            goats[0].accel(0,-1);
+            goat.accel(0,-1);
             break;
         case KeyEvent.VK_RIGHT:
-            goats[0].accel(0,1);
+            goat.accel(0,1);
             break;
     	case KeyEvent.VK_UP:
-    		goats[0].accel(1,-1);
+    		goat.jump();
+    		//goat.accel(1,-1);
     		break;
     	case KeyEvent.VK_DOWN:
-    		goats[0].accel(1,1);
+    		//goat.accel(1,1);
+    		break;
+    	case KeyEvent.VK_SPACE:
+    		goat.stop();
     		break;
     }
 
@@ -46,35 +54,36 @@ public class Listener extends JPanel implements KeyListener {
         int keyCode = k.getKeyCode();
         switch (keyCode) {
         case KeyEvent.VK_LEFT:
-            goats[0].accel(0,0);
+            goat.accel(0,0);
             break;
         case KeyEvent.VK_RIGHT:
-            goats[0].accel(0,0);
+            goat.accel(0,0);
             break;
     	case KeyEvent.VK_UP:
-    		goats[0].accel(1,0);
+    		//goat.accel(1,0);
     		break;
     	case KeyEvent.VK_DOWN:
-    		goats[0].accel(1,0);
+    		//goat.accel(1,0);
     		break;
     }
     }
     public void keyTyped(KeyEvent k) {
         int keyCode = k.getKeyCode();
-        switch (keyCode) {
+      /*  switch (keyCode) {
         case KeyEvent.VK_LEFT:
-            goats[0].accel(0,-1);
+            goat.accel(0,-1);
             break;
         case KeyEvent.VK_RIGHT:
-            goats[0].accel(0,1);
+            goat.accel(0,1);
             break;
     	case KeyEvent.VK_UP:
-    		goats[0].accel(1,-1);
+    		goat.accel(1,-1);
     		break;
     	case KeyEvent.VK_DOWN:
-    		goats[0].accel(1,1);
+    		goat.accel(1,1);
     		break;
     }
+    		*/
     }
 
 }

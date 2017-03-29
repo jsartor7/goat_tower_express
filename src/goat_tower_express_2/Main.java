@@ -27,15 +27,16 @@ public class Main extends JApplet  {
 	static FileUtil fu=new FileUtil();
     static JFrame frame = new JFrame("Goat Tower Express 2");
 	static DrawFrame dframe;
-	static int max_goats=20;
-	static Goat[] goats = new Goat[max_goats];
+	static EntityList master_list;
 	static Listener listen;
+	
 	
 	static private void init_game()
 	{
 	        frame.setVisible(true);
-	        dframe = new DrawFrame(goats);
-	        listen= new Listener(goats);
+	        dframe = new DrawFrame();
+	        master_list=new EntityList(dframe);
+	        listen= new Listener(master_list);
 	        frame.add("Center",listen);
 	        listen.add(dframe);
 	        listen.setPreferredSize(dframe.getPreferredSize());
@@ -45,26 +46,6 @@ public class Main extends JApplet  {
 	       frame.addWindowListener(new WindowAdapter() {
 	           public void windowClosing(WindowEvent e) {System.exit(0);}
 	       });
-	       init_goats();
-	}
-
-	static private void init_goats()
-	{
-		//need to handle resizing of frame or something
-		int x_max=(int) dframe.getPreferredSize().getWidth();
-		int y_max=(int) dframe.getPreferredSize().getHeight();
-		
-		//this is kind of stupid
-		//needs to be more generic for different sprites
-		for (int i=0;i<max_goats;i++)
-		{
-			if(i==0)
-				goats[i]= new Goat(0,dframe.goatimg,700,700,0,0,x_max,y_max);
-		
-			else
-				goats[i]= new Goat(1,dframe.grassimg,-1,-1,0,0,x_max,y_max);
-		}
-
 	}
 	
 	static private void draw()
@@ -73,15 +54,6 @@ public class Main extends JApplet  {
         frame.pack();     
 	}
 	
-	static private void update_goats(int time)
-	{
-		for(int i=0; i<max_goats;i++)
-		{
-			goats[i].reconfigure(time);
-			if(i>0)
-				goats[0].check_collision(goats[i]);
-		}
-	}
 	
 	static private void main_loop()
 	{
@@ -95,7 +67,7 @@ public class Main extends JApplet  {
 			if(elapse>30)
 			{	
 				last_time=time;
-				update_goats(elapse);        
+				master_list.update_entities(elapse);        
 				draw();
 
 			}

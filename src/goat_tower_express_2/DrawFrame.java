@@ -16,49 +16,26 @@ import javax.swing.JLabel;
 
 public class DrawFrame extends Component {
 
-    public BufferedImage goatimg;
-    public BufferedImage grassimg;
     static public BufferedImage dirtimg;
   //  static BufferedImage bi = new BufferedImage(2000,2000, BufferedImage.TYPE_INT_ARGB);
 	FileUtil fu=new FileUtil();
-	static Goat[] goats;
+	EntityList master_list;
 	static Graphics g;
     Graphics2D g2d;
-
-
-    
- //   float[] scales = { 1f, 1f, 1f, 1f };
- //   float[] offsets = new float[4];
     RescaleOp dirtrop;
     		
-    public DrawFrame(Goat[] in_goats) {
-    	dirtimg=fu.LoadImg("dirt2.jpg");	
-    	g=dirtimg.createGraphics();
-    	goatimg=fu.LoadImg("goat.png");      	
-    	grassimg=fu.LoadImg("grass.png");      	
-    	goats=in_goats;
+    public DrawFrame() {
+    	dirtimg=fu.LoadImg("dirt.jpg");	
+    	g=dirtimg.createGraphics();   	
     }
 
     public Dimension getPreferredSize() {
         return new Dimension	(dirtimg.getWidth(null), dirtimg.getHeight(null));
     }
-
     
-    public void setOpacity(float opacity) {
-    	//don't really need this function at all
-  //      scales[3] = opacity;
-    //    rop = new RescaleOp(scales, offsets, null);
-    }
-
-    public void setColorScale(float opacity) {
-    	//don't really need this function at all
-  //      scales[3] = opacity;
-    //    rop = new RescaleOp(scales, offsets, null);
-    }
     public void paint(Graphics g) {
         g2d = (Graphics2D)g;
-        
-        //draw backgroun first
+        //draw background first
         g2d.drawImage(dirtimg, dirtrop, 0, 0);
         
         //next the counter
@@ -66,12 +43,14 @@ public class DrawFrame extends Component {
         int style = Font.BOLD | Font.ITALIC;
         Font font = new Font ("Helvetica", style , 40);
         g2d.setFont(font);
-        g2d.drawString("You have eaten "+goats[0].kill_count+" grass", 100, 100);
+        g2d.drawString("You have eaten "+master_list.goat.kill_count+" grass", 100, 100);
    
         //next all the important stuff
-        for(int i=0;i<goats.length;i++)
+        Entity[] list =master_list.get_list();
+    	Entity cur;
+        for(int i=0;i<list.length;i++)
         {
-        	Goat cur=goats[i];
+        	cur=list[i];
         	g2d.drawImage(cur.img, cur.rop, cur.get_pos(1,0), cur.get_pos(1,1));
         }
         
